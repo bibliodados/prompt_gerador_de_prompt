@@ -21,6 +21,9 @@
       --ok-line:rgba(126,240,200,.20);
       --ok-text:#d7fff3;
       --shadow:0 14px 36px rgba(0,0,0,.30);
+      --pix:#22c55e;
+      --pix-hover:#16a34a;
+      --pix-text:#ffffff;
     }
 
     body.light{
@@ -38,6 +41,9 @@
       --ok-line:rgba(20,150,90,.18);
       --ok-text:#155c41;
       --shadow:0 10px 26px rgba(38,54,92,.12);
+      --pix:#16a34a;
+      --pix-hover:#15803d;
+      --pix-text:#ffffff;
     }
 
     *{box-sizing:border-box}
@@ -218,7 +224,7 @@
       font-weight:700;
       font-size:.95rem;
       margin-top:8px;
-      transition:transform .15s ease, opacity .15s ease;
+      transition:transform .15s ease, opacity .15s ease, background .15s ease;
     }
 
     .btn:hover{transform:translateY(-1px)}
@@ -230,6 +236,15 @@
     .btn.secondary{
       background:var(--secondary);
       color:var(--secondary-text);
+    }
+
+    .btn.pix{
+      background:var(--pix);
+      color:var(--pix-text);
+    }
+
+    .btn.pix:hover{
+      background:var(--pix-hover);
     }
 
     .layout{
@@ -295,6 +310,53 @@
       font-size:.93rem;
     }
 
+    .pix-box{
+      margin-top:18px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .pix-box h3{
+      margin:0 0 10px;
+      font-size:1.03rem;
+    }
+
+    .pix-box p{
+      margin:0 0 12px;
+      color:var(--muted);
+      line-height:1.58;
+    }
+
+    .pix-key{
+      width:100%;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--panel-2);
+      color:var(--text);
+      font:600 14px/1.5 Consolas,"Courier New",monospace;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      box-shadow:var(--shadow);
+    }
+
+    .pix-tools{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .pix-tools .btn{
+      width:auto;
+      flex:1;
+      min-width:180px;
+      margin-top:0;
+    }
+
     @media (max-width: 980px){
       .grid,.layout{
         grid-template-columns:1fr;
@@ -304,6 +366,25 @@
       }
       textarea{
         min-height:460px;
+      }
+    }
+
+    @media (max-width: 640px){
+      .wrap{
+        width:min(1180px, calc(100% - 18px));
+      }
+
+      .title-box,
+      .theme-box,
+      .card,
+      .side,
+      .pix-box{
+        border-radius:16px;
+      }
+
+      .tools .btn,
+      .pix-tools .btn{
+        min-width:100%;
       }
     }
   </style>
@@ -541,15 +622,33 @@ Comece sempre o prompt com "Você é um..." sem necessitar colocar nada antes di
         </div>
       </div>
 
-      <div class="side">
-        <h3>Como usar</h3>
-        <p>1. Salve este conteúdo como arquivo <strong>.html</strong>.</p>
-        <p>2. Abra o arquivo no navegador.</p>
-        <p>3. Escolha a plataforma desejada.</p>
-        <p>4. No Claude e no DeepSeek, o conteúdo é copiado antes da abertura.</p>
+      <div>
+        <div class="side">
+          <h3>Como usar</h3>
+          <p>1. Salve este conteúdo como arquivo <strong>.html</strong>.</p>
+          <p>2. Abra o arquivo no navegador.</p>
+          <p>3. Escolha a plataforma desejada.</p>
+          <p>4. No Claude e no DeepSeek, o conteúdo é copiado antes da abertura.</p>
 
-        <div class="note">
-          O tema escolhido fica salvo no navegador. Você pode editar o texto do prompt e reutilizar o mesmo launcher para outros conteúdos.
+          <div class="note">
+            O tema escolhido fica salvo no navegador. Você pode editar o texto do prompt e reutilizar o mesmo launcher para outros conteúdos.
+          </div>
+        </div>
+
+        <div class="pix-box">
+          <h3>Apoie esta iniciativa</h3>
+          <p>Projeto pessoal mantido com recursos próprios. Contribuições via PIX são voluntárias.</p>
+
+          <div class="pix-key" id="pixKey">2bc6d233-7e5c-4407-b5d7-8aa9e96e6093</div>
+
+          <div class="pix-tools">
+            <button class="btn pix" onclick="copyPix()">📲 Copiar chave PIX</button>
+            <button class="btn secondary" onclick="selectPix()">Selecionar chave</button>
+          </div>
+
+          <div class="note">
+            Chave PIX no formato copia e cola. Ao copiar, a mensagem de status será atualizada no topo da página.
+          </div>
         </div>
       </div>
     </div>
@@ -557,6 +656,7 @@ Comece sempre o prompt com "Você é um..." sem necessitar colocar nada antes di
 
   <script>
     const originalPrompt = document.getElementById("promptBox").value;
+    const pixKey = "2bc6d233-7e5c-4407-b5d7-8aa9e96e6093";
 
     function updateThemeButtons(theme){
       document.getElementById("lightBtn").classList.toggle("active", theme === "light");
@@ -599,6 +699,27 @@ Comece sempre o prompt com "Você é um..." sem necessitar colocar nada antes di
         setStatus("Falha ao copiar automaticamente. Use a caixa de texto para cópia manual.");
         return false;
       }
+    }
+
+    async function copyPix(){
+      try{
+        await navigator.clipboard.writeText(pixKey);
+        setStatus("Chave PIX copiada para a área de transferência.");
+        return true;
+      }catch(e){
+        setStatus("Falha ao copiar a chave PIX automaticamente.");
+        return false;
+      }
+    }
+
+    function selectPix(){
+      const range = document.createRange();
+      const pixNode = document.getElementById("pixKey");
+      range.selectNodeContents(pixNode);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      setStatus("Chave PIX selecionada.");
     }
 
     function openChatGPT(){
