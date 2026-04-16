@@ -636,10 +636,12 @@ Comece sempre o prompt com "Você é um..." sem necessitar colocar nada antes di
         </div>
 
         <div class="pix-box">
-          <h3>Apoie esta iniciativa</h3>
-          <p>Projeto pessoal mantido com recursos próprios. Contribuições via PIX são voluntárias.</p>
+          <h3 align="center">Apoie esta iniciativa</h3>
+          <p align="center">Projeto pessoal mantido com recursos próprios. Contribuições via PIX são voluntárias.</p>
 
-          <div class="pix-key" id="pixKey">2bc6d233-7e5c-4407-b5d7-8aa9e96e6093</div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=b3da4485-83c5-4525-ab86-f8c44bf4cb27" alt="QR Code PIX" style="border-radius: 8px; margin-bottom: 1rem; background: white; padding: 0.5rem; width: 120px; height: 120px; display: block; margin-left: auto; margin-right: auto;">
+
+          <div class="pix-key" id="pixKey" style="text-align: center;">b3da4485-83c5-4525-ab86-f8c44bf4cb27</div>
 
           <div class="pix-tools">
             <button class="btn pix" onclick="copyPix()">📲 Copiar chave PIX</button>
@@ -656,7 +658,7 @@ Comece sempre o prompt com "Você é um..." sem necessitar colocar nada antes di
 
   <script>
     const originalPrompt = document.getElementById("promptBox").value;
-    const pixKey = "2bc6d233-7e5c-4407-b5d7-8aa9e96e6093";
+    const pixKey = "b3da4485-83c5-4525-ab86-f8c44bf4cb27";
 
     function updateThemeButtons(theme){
       document.getElementById("lightBtn").classList.toggle("active", theme === "light");
